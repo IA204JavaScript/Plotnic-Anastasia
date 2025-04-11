@@ -1,0 +1,145 @@
+
+```markdown
+# Лабораторная работа №3 — Продвинутые объекты в JavaScript
+
+## Цель работы
+
+Цель лабораторной работы — изучить работу с классами и объектами в JavaScript:
+- создание классов и функций-конструкторов;
+- использование методов и конструкторов;
+- наследование;
+- опциональная цепочка (`?.`);
+- документирование кода с использованием **JSDoc**.
+
+## Задание
+
+Разработать консольное приложение для моделирования системы инвентаря с возможностью:
+- добавления предметов;
+- изменения их свойств;
+- управления ими (например, использование оружия и его ремонт).
+
+## Реализация
+
+### Класс `Item`
+
+Для создания предмета инвентаря использована функция-конструктор `Item`, которая содержит следующие поля:
+- `name` — название предмета;
+- `weight` — вес;
+- `rarity` — редкость (common, uncommon, rare, legendary).
+
+Методы:
+- `getInfo()` — возвращает строку с информацией о предмете;
+- `setWeight(newWeight)` — изменяет вес предмета.
+
+Пример:
+
+```javascript
+function Item(name, weight, rarity) {
+    this.name = name;
+    this.weight = weight;
+    this.rarity = rarity;
+}
+
+Item.prototype.getInfo = function() {
+    return `Название: ${this.name}, Вес: ${this.weight} кг, Редкость: ${this.rarity}`;
+};
+
+Item.prototype.setWeight = function(newWeight) {
+    this.weight = newWeight;
+};
+```
+
+### Класс `Weapon`
+
+Класс `Weapon` расширяет `Item` и добавляет дополнительные свойства:
+- `damage` — урон;
+- `durability` — прочность.
+
+Методы:
+- `use()` — уменьшает прочность на 10, если она больше 0;
+- `repair()` — восстанавливает прочность до 100.
+
+Пример:
+
+```javascript
+function Weapon(name, weight, rarity, damage, durability) {
+    Item.call(this, name, weight, rarity);
+    this.damage = damage;
+    this.durability = durability;
+}
+
+Weapon.prototype = Object.create(Item.prototype);
+Weapon.prototype.constructor = Weapon;
+
+Weapon.prototype.use = function() {
+    if (this.durability > 0) {
+        this.durability -= 10;
+        console.log(`${this.name} использовано. Прочность теперь: ${this.durability}`);
+    } else {
+        console.log(`${this.name} сломано.`);
+    }
+};
+
+Weapon.prototype.repair = function() {
+    this.durability = 100;
+    console.log(`${this.name} отремонтировано.`);
+};
+```
+
+### Пример использования
+
+```javascript
+const sword = new Item("Steel Sword", 3.5, "rare");
+console.log(sword.getInfo());
+sword.setWeight(4.0);
+console.log(sword.getInfo());
+
+const bow = new Weapon("Longbow", 2.0, "uncommon", 15, 100);
+console.log(bow.getInfo());
+bow.use();
+bow.use();
+bow.repair();
+```
+
+### Опциональная цепочка (`?.`)
+
+Опциональная цепочка используется для безопасного доступа к свойствам объектов:
+
+```javascript
+const unknownItem = null;
+console.log(unknownItem?.getInfo()); // undefined
+```
+
+### Документация с использованием JSDoc
+
+Код задокументирован с помощью **JSDoc** для улучшения понимания функций и методов:
+
+```javascript
+/**
+ * Конструктор предмета инвентаря.
+ * @param {string} name - Название предмета.
+ * @param {number} weight - Вес предмета.
+ * @param {string} rarity - Редкость предмета.
+ */
+function Item(name, weight, rarity) { ... }
+```
+
+## Контрольные вопросы
+
+1. **Что такое `this` в методах класса?**  
+   В методах класса `this` указывает на текущий экземпляр объекта.
+
+2. **Как работает `#`?**  
+   Модификатор `#` используется для объявления приватных свойств и методов, доступных только внутри класса.
+
+3. **Классы vs. функции-конструкторы?**  
+   Классы предлагают более современный и лаконичный синтаксис для работы с объектами, в то время как функции-конструкторы использовались до ES6.
+
+## Выводы
+
+- Реализованы классы и методы для работы с предметами и оружием.
+- Использована опциональная цепочка для безопасного доступа к свойствам.
+- Документирован код с помощью **JSDoc**.
+```
+
+
